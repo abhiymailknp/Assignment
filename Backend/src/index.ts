@@ -10,7 +10,7 @@ const start = async () => {
 	try {
 		await db.connect();
 		console.log("Connected to the database!");
-		await app.listen({ port: 3000 });
+		await app.listen({ port: 3001 });
 		console.log("Server is listening on http://localhost:3000");
 	} catch (err) {
 		app.log.error(err);
