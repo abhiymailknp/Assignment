@@ -1,15 +1,14 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
+import axios from 'axios'
 
 export interface SignInFormValues {
   email: string;
   password: string;
 }
 
-export interface SigninFormProps {
-  handleSignin: (formData: SignInFormValues) => void;
-}
 
-const SigninForm: React.FC<SigninFormProps> = ({ handleSignin }) => {
+
+const SigninForm: React.FC = () => {
   const [formData, setFormData] = useState<SignInFormValues>({
     email: '',
     password: '',
@@ -22,21 +21,49 @@ const SigninForm: React.FC<SigninFormProps> = ({ handleSignin }) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSignin(formData);
+    let data = JSON.stringify(formData);
+    let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'http://localhost:3001/signin',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : data
+      };
+      
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <form onSubmit={handleSubmit} className="w-75 p-4 border rounded bg-light">
+      <h2 className="mb-4">Sign In</h2>
+      <div className='mb-3'>
+      <label className='form-label'>
         Email:
-        <input type="email" name="email" value={formData.email} onChange={handleChange} />
+        <input type="email" name="email" value={formData.email} onChange={handleChange} className='form-control'/>
       </label>
-      <label>
+      </div>
+      <div className='mb-3'>
+      <label className='form-label'>
         Password:
-        <input type="password" name="password" value={formData.password} onChange={handleChange} />
+        <input type="password" name="password" value={formData.password} onChange={handleChange} className='form-control'/>
       </label>
-      <button type="submit">Sign In</button>
+      </div>
+      
+      <div className="d-flex">
+      <button type="submit" className="btn btn-primary">Sign In</button>
+      </div>
     </form>
+    </div>
   );
 };
 
